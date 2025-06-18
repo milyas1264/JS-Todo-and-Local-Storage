@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>localStorage Demo</title>
+</head>
+<body>
+
+  <h2>👋 Apna Naam Enter karein:</h2>
+
+  <input type="text" id="nameInput" placeholder="Apna naam likhein">
+  <button onclick="saveName()">Save</button>
+
+  <h3 id="greeting"></h3>
+
+  <script>
+    // ✅ Check karein agar pehle se naam save hai to usay dikhayein
+    window.onload = function() {
+      let storedName = localStorage.getItem("userName");
+      if (storedName) {
+        document.getElementById("greeting").textContent = "Welcome back, " + storedName + "!";
+      }
+    }
+
+    // ✅ Save Name function
+    function saveName() {
+      let name = document.getElementById("nameInput").value;
+
+      if (name) {
+        localStorage.setItem("userName", name);
+        document.getElementById("greeting").textContent = "Welcome, " + name + "!";
+        document.getElementById("nameInput").value = "";
+      } else {
+        alert("⚠️ Naam likhna zaroori hai!");
+      }
+    }
+  </script>
+
+</body>
+</html>
