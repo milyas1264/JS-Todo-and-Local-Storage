@@ -1,37 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>localStorage Demo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To do list</title>
 </head>
 <body>
-  <button><a href="Todo.html">Todo</a></button><hr>
-  <h2> Apna Naam Enter karein:</h2>
+  <style>
+    body {
+      font-family: Arial;
+      max-width: 700px;
+      margin: 40px auto;
+      border: 4px dotted blue;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 95%;
+      margin: 0 5px 10px 0;
+    }
+    ul {
+      padding: 0;
+    }
+    li {
+      list-style: none;
+      margin: 5px 0;
+      background: #f2f2f2;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .delete-btn {
+      background: red;
+      color: white;
+      border: none;
+      padding: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <button><a href="index.html">Local Storage</a></button><hr>
+  <h2> My To-Do List (Local Storage)</h2>
 
-  <input type="text" id="nameInput" placeholder="Apna naam likhein">
-  <button onclick="saveName()">Save</button>
+  <input type="text" id="taskInput" placeholder="Naya task likhein">
+  <button onclick="addTask()">Add Task</button>
 
-  <h3 id="greeting"></h3>
+  <ul id="taskList"></ul>
 
   <script>
-    // ✅ Check karein agar pehle se naam save hai to usay dikhayein
-    window.onload = function() {
-      let storedName = localStorage.getItem("userName");
-      if (storedName) {
-        document.getElementById("greeting").textContent = "Welcome back, " + storedName + "!";
+    //  Load tasks from localStorage on page load
+    window.onload = function () {
+      loadTasks();
+    }
+
+    //  Task add karna
+    function addTask() {
+      const taskInput = document.getElementById("taskInput");
+      const task = taskInput.value.trim();
+
+      if (task !== "") {
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        tasks.push(task);
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        taskInput.value = "";
+        loadTasks();
+      } else {
+        alert(" Task likhna zaroori hai");
       }
     }
 
-    // ✅ Save Name function
-    function saveName() {
-      let name = document.getElementById("nameInput").value;
+    //  Tasks display karna
+    function loadTasks() {
+      const taskList = document.getElementById("taskList");
+      taskList.innerHTML = "";
 
-      if (name) {
-        localStorage.setItem("userName", name);
-        document.getElementById("greeting").textContent = "Welcome, " + name + "!";
-        document.getElementById("nameInput").value = "";
-      } else {
-        alert("⚠️ Naam likhna zaroori hai!");
-      }
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+      tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${task}
+          <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
+        `;
+        taskList.appendChild(li);
+      });
+    }
+
+    // ✅ Task delete karna
+    function deleteTask(index) {
+      let tasks = JSON.parse(localStorage.getItem("tasks"));
+      tasks.splice(index, 1);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+      loadTasks();
     }
   </script>
 
